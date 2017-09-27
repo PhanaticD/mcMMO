@@ -1,6 +1,6 @@
 #
 #  Experience configuration
-#  Last updated on ${project.version}-b${BUILD_NUMBER}
+#  Last updated on 1.5.04-SNAPSHOT-b82
 #
 #  Configure the experience formula and experience settings here.
 #
@@ -146,30 +146,27 @@ Experience:
         Generic: 70
         Jungle: 100
         Redwood: 80
-        Huge_Mushroom_1: 70
-        Huge_Mushroom_2: 70
+        Huge_Mushroom_Red: 70
+        Huge_Mushroom_Brown: 70
     Herbalism:
         Allium: 300
         Azure_Bluet: 150
-        Beetroot_Block_Ripe: 50
         Blue_Orchid: 150
         Brown_Mushroom: 150
         Cactus: 30
-        Carrot_Ripe: 50
-        Chorus_Flower: 25
-        Chorus_Plant: 1
-        Cocoa_Ripe: 30
-        Crops_Ripe: 50
+        Carrot: 50
+        Cocoa: 30
+        Crops: 50
         Dead_Bush: 30
         Lilac: 50
         Melon_Block: 20
-        Nether_Warts_Ripe: 50
+        Nether_Warts: 50
         Orange_Tulip: 150
         Oxeye_Daisy: 150
         Peony: 50
         Pink_Tulip: 150
         Poppy: 100
-        Potato_Ripe: 50
+        Potato: 50
         Pumpkin: 20
         Red_Mushroom: 150
         Red_Tulip: 150
@@ -188,7 +185,6 @@ Experience:
         Coal_Ore: 100
         Diamond_Ore: 750
         Emerald_Ore: 1000
-        End_Bricks: 200
         Ender_Stone: 150
         Glowstone: 30
         Gold_Ore: 350
@@ -202,14 +198,10 @@ Experience:
         Quartz_Ore: 100
         Redstone_Ore: 150
         Sandstone: 30
-        Stained_Clay|*: 50
-        Stone|*: 30
+        Stained_Clay: 50
+        Stone: 30
         Red_Sandstone: 100
         Prismarine: 70
-        Purpur_Block: 200
-        Purpur_Pillar: 250
-        Purpur_Slab: 150
-        Purpur_Stairs: 250
     Repair:
         Base: 1000.0
         Wood: 0.6
@@ -234,10 +226,6 @@ Experience:
             Wolf: 250
             Ocelot: 500
             Horse: 1000
-            Donkey: 1000
-            Mule: 1000
-            Skeleton_Horse: 1000
-            Zombie_Horse: 1000
     Combat:
         Multiplier:
             Animals: 1.0
@@ -262,30 +250,3 @@ Experience:
             Endermite: 2.0
             Guardian: 3.0
             Elder_Guardian: 4.0
-            Shulker: 2.0
-            Donkey: 1.0
-            Mule: 1.0
-            Horse: 1.0
-            Zombie_Villager: 2.0
-            Skeleton_Horse: 1.0
-            Zombie_Horse: 1.0
-            Husk: 3.0
-            Evoker: 3.0
-            Polar_Bear: 1.0
-            Llama: 1.0
-            Vindicator: 3.0
-            Stray: 2.0
-            Rabbit: 1.0
-            Chicken: 1.0
-            Bat: 1.0
-            Shulker: 2.0
-            Mushroom_Cow: 1.0
-            Cow: 1.0
-            Sheep: 1.0
-            Pig: 1.0
-            Squid: 1.0
-            Ocelot: 1.0
-            Villager: 1.0
-            Snowman: 0.0
-            Parrot: 1.0
-            Illusioner: 3.0

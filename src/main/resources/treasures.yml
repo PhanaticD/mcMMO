@@ -1,6 +1,6 @@
 #
 #  Settings for Fishing
-#  Last updated on ${project.version}-b${BUILD_NUMBER}
+#  Last updated on 1.5.04-SNAPSHOT-b82
 ###
 Fishing:
     LEATHER_BOOTS:
@@ -375,7 +375,7 @@ Enchantments_Rarity:
         BLAST_PROTECTION: 4
         PROJECTILE_PROTECTION: 4
         RESPIRATION: 3
-        AQUA_AFFINITY: 1
+        AQUA_AFFINITY: 2
         THORNS: 3
         SHARPNESS: 5
         SMITE: 5
@@ -651,9 +651,7 @@ Shake:
             XP: 0
             Drop_Chance: 1.0
             Drop_Level: 0
-        POTION|0|POISON:
-            PotionData:
-                PotionType: POISON
+        POTION_POISON:
             Amount: 1
             XP: 0
             Drop_Chance: 1.0
@@ -811,17 +809,6 @@ Shake:
             XP: 0
             Drop_Chance: 100.0
             Drop_Level: 0
-    SHULKER:
-        SHULKER_SHELL:
-            Amount: 1
-            XP: 0
-            Drop_Chance: 25.0
-            Drop_Level: 0
-        PURPUR_BLOCK:
-            Amount: 1
-            XP: 0
-            Drop_Chance: 75.0
-            Drop_Level: 0
     SKELETON:
         SKULL_ITEM:
             Data: 0
@@ -874,23 +861,17 @@ Shake:
             Drop_Chance: 100.0
             Drop_Level: 0
     WITCH:
-        SPLASH_POTION|0|INSTANT_HEAL:
-            PotionData:
-                PotionType: INSTANT_HEAL
+        POTION_INSTANT_HEAL:
             Amount: 1
             XP: 0
             Drop_Chance: 1.0
             Drop_Level: 0
-        SPLASH_POTION|0|FIRE_RESISTANCE:
-            PotionData:
-                PotionType: FIRE_RESISTANCE
+        POTION_FIRE_RESISTANCE:
             Amount: 1
             XP: 0
             Drop_Chance: 1.0
             Drop_Level: 0
-        SPLASH_POTION|0|SPEED:
-            PotionData:
-                PotionType: SPEED
+        POTION_SPEED:
             Amount: 1
             XP: 0
             Drop_Chance: 1.0
@@ -929,23 +910,6 @@ Shake:
             Amount: 1
             XP: 0
             Drop_Chance: 15.0
-            Drop_Level: 0
-    WITHER_SKELETON:
-        SKULL_ITEM:
-            Data: 0
-            Amount: 1
-            XP: 0
-            Drop_Chance: 2.0
-            Drop_Level: 0
-        BONE:
-            Amount: 1
-            XP: 0
-            Drop_Chance: 49.0
-            Drop_Level: 0
-        COAL:
-            Amount: 2
-            XP: 0
-            Drop_Chance: 49.0
             Drop_Level: 0
     ZOMBIE:
         SKULL_ITEM:
