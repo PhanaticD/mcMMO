@@ -41,7 +41,6 @@ public class Herbalism {
                 return true;
 
             case DIRT :
-            case GRASS_PATH :
                 blockState.setType(Material.GRASS);
                 return true;
 
@@ -54,59 +53,6 @@ public class Herbalism {
         }
     }
 
-    public static HashSet<Block> findChorusPlant(Block target) {
-        return findChorusPlant(target, new HashSet<Block>());
-    }
-
-    private static HashSet<Block> findChorusPlant(Block target, HashSet<Block> traversed) {
-        if (target.getType() != Material.CHORUS_PLANT) {
-            return traversed;
-        }
-        // Prevent any infinite loops, who needs more than 64 chorus anyways
-        if (traversed.size() > 64)
-        {
-            return traversed;
-        }
-
-        traversed.add(target);
-
-        Block relative = target.getRelative(BlockFace.UP, 1);
-        if (!traversed.contains(relative)) {
-            if (relative.getType() == Material.CHORUS_PLANT) {
-                traversed.addAll(findChorusPlant(relative, traversed));
-            }
-        }
-
-        relative = target.getRelative(BlockFace.NORTH, 1);
-        if (!traversed.contains(relative)) {
-            if (relative.getType() == Material.CHORUS_PLANT) {
-                traversed.addAll(findChorusPlant(relative, traversed));
-            }
-        }
-
-        relative = target.getRelative(BlockFace.SOUTH, 1);
-        if (!traversed.contains(relative)) {
-            if (relative.getType() == Material.CHORUS_PLANT) {
-                traversed.addAll(findChorusPlant(relative, traversed));
-            }
-        }
-
-        relative = target.getRelative(BlockFace.EAST, 1);
-        if (!traversed.contains(relative)) {
-            if (relative.getType() == Material.CHORUS_PLANT) {
-                traversed.addAll(findChorusPlant(relative, traversed));
-            }
-        }
-
-        relative = target.getRelative(BlockFace.WEST, 1);
-        if (!traversed.contains(relative)) {
-            if (relative.getType() == Material.CHORUS_PLANT) {
-                traversed.addAll(findChorusPlant(relative, traversed));
-            }
-        }
-
-        return traversed;
-    }
 
     /**
      * Calculate the drop amounts for multi block plants based on the blocks
@@ -121,21 +67,6 @@ public class Herbalism {
         Material blockType = blockState.getType();
         int dropAmount = mcMMO.getPlaceStore().isTrue(block) ? 0 : 1;
 
-        if (blockType == Material.CHORUS_PLANT) {
-            dropAmount = 1;
-
-            if (block.getRelative(BlockFace.DOWN, 1).getType() == Material.ENDER_STONE) {
-                HashSet<Block> blocks = findChorusPlant(block);
-
-                dropAmount = blocks.size();
-
-                /*
-                 * for(Block b : blocks) {
-                 * b.breakNaturally();
-                 * }
-                 */
-            }
-        } else {
             // Handle the two blocks above it - cacti & sugar cane can only grow 3 high naturally
             for (int y = 1; y < 3; y++) {
                 Block relativeBlock = block.getRelative(BlockFace.UP, y);
@@ -150,7 +81,6 @@ public class Herbalism {
                     dropAmount++;
                 }
             }
-        }
 
         return dropAmount;
     }
@@ -166,7 +96,6 @@ public class Herbalism {
         switch (blockState.getType()) {
             case DIRT :
             case GRASS :
-            case GRASS_PATH :
                 blockState.setType(Material.MYCEL);
                 return true;
 

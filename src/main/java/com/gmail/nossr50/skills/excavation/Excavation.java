@@ -20,14 +20,39 @@ public class Excavation {
      * @return the list of treasures that could be found
      */
     protected static List<ExcavationTreasure> getTreasures(BlockState blockState) {
-        String friendly = StringUtils.getFriendlyConfigMaterialDataString(blockState.getData());
-        if (TreasureConfig.getInstance().excavationMap.containsKey(friendly))
-            return TreasureConfig.getInstance().excavationMap.get(friendly);
-        return new ArrayList<ExcavationTreasure>();
+        switch (blockState.getType()) {
+            case DIRT: {
+                return (blockState.getRawData() == 2) ? TreasureConfig.getInstance().excavationFromPodzol : TreasureConfig.getInstance().excavationFromDirt;
+            }
+            case GRASS: {
+                return TreasureConfig.getInstance().excavationFromGrass;
+            }
+            case SAND: {
+                return (blockState.getRawData() == 1) ? TreasureConfig.getInstance().excavationFromRedSand : TreasureConfig.getInstance().excavationFromSand;
+            }
+            case GRAVEL: {
+                return TreasureConfig.getInstance().excavationFromGravel;
+            }
+            case CLAY: {
+                return TreasureConfig.getInstance().excavationFromClay;
+            }
+            case MYCEL: {
+                return TreasureConfig.getInstance().excavationFromMycel;
+            }
+            case SOUL_SAND: {
+                return TreasureConfig.getInstance().excavationFromSoulSand;
+            }
+            case SNOW: {
+                return TreasureConfig.getInstance().excavationFromSnow;
+            }
+            default: {
+                return new ArrayList<ExcavationTreasure>();
+            }
+        }
     }
 
     protected static int getBlockXP(BlockState blockState) {
-        int xp = ExperienceConfig.getInstance().getXp(SkillType.EXCAVATION, blockState.getData());
+        int xp = ExperienceConfig.getInstance().getXp(SkillType.EXCAVATION, blockState.getBlock().getType());
 
         if (xp == 0 && mcMMO.getModManager().isCustomExcavationBlock(blockState)) {
             xp = mcMMO.getModManager().getBlock(blockState).getXpGain();

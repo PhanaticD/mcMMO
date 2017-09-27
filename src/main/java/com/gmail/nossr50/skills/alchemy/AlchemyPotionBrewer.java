@@ -3,6 +3,7 @@ package com.gmail.nossr50.skills.alchemy;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
@@ -26,232 +27,233 @@ import com.gmail.nossr50.util.Permissions;
 import com.gmail.nossr50.util.player.UserManager;
 
 public final class AlchemyPotionBrewer {
-    public static boolean isValidBrew(Player player, ItemStack[] contents) {
-        if (!isValidIngredient(player, contents[Alchemy.INGREDIENT_SLOT])) {
-            return false;
-        }
 
-        for (int i = 0; i < 3; i++) {
-            if (contents[i] == null || contents[i].getType() != Material.POTION && contents[i].getType() != Material.SPLASH_POTION && contents[i].getType() != Material.LINGERING_POTION) {
-                continue;
-            }
+	public static boolean isValidBrew(Player player, ItemStack[] contents) {
+		if (!isValidIngredient(player, contents[Alchemy.INGREDIENT_SLOT])) {
+			return false;
+		}
 
-            if (getChildPotion(PotionConfig.getInstance().getPotion(contents[i]), contents[Alchemy.INGREDIENT_SLOT]) != null) {
-                return true;
-            }
-        }
+		for (int i = 0; i < 3; i++) {
+			if (contents[i] == null || contents[i].getType() != Material.POTION) {
+				continue;
+			}
 
-        return false;
-    }
+			if (getChildPotion(PotionConfig.getInstance().getPotion(contents[i].getDurability()), contents[Alchemy.INGREDIENT_SLOT]) != null) {
+					return true;
+			}
+		}
 
-    private static AlchemyPotion getChildPotion(AlchemyPotion potion, ItemStack ingredient) {
-        if (potion != null) {
-            return potion.getChild(ingredient);
-        }
+		return false;
+	}
 
-        return null;
-    }
+	private static AlchemyPotion getChildPotion(AlchemyPotion potion, ItemStack ingredient) {
+		if (potion != null) {
+			return PotionConfig.getInstance().getPotion(potion.getChildDataValue(ingredient));
+		}
 
-    public static boolean isEmpty(ItemStack item) {
-        return item == null || item.getType() == Material.AIR || item.getAmount() == 0;
-    }
+		return null;
+	}
 
-    private static void removeIngredient(BrewerInventory inventory, Player player) {
-        ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
+	public static boolean isEmpty(ItemStack item) {
+		return item == null || item.getType() == Material.AIR || item.getAmount() == 0;
+	}
 
-        if (isEmpty(ingredient) || !isValidIngredient(player, ingredient)) {
-            return;
-        }
-        else if (ingredient.getAmount() <= 1) {
-            inventory.setIngredient(null);
-            return;
-        }
-        else {
-            ingredient.setAmount(ingredient.getAmount() - 1);
-            inventory.setIngredient(ingredient);
-            return;
-        }
-    }
+	private static void removeIngredient(BrewerInventory inventory, Player player) {
+		ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
 
-    private static boolean hasIngredient(BrewerInventory inventory, Player player) {
-        ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
+		if (isEmpty(ingredient) || !isValidIngredient(player, ingredient)) {
+			return;
+		}
+		else if (ingredient.getAmount() <= 1) {
+			inventory.setIngredient(null);
+			return;
+		}
+		else {
+			ingredient.setAmount(ingredient.getAmount() - 1);
+			inventory.setIngredient(ingredient);
+			return;
+		}
+	}
 
-        return !isEmpty(ingredient) && isValidIngredient(player, ingredient);
-    }
+	private static boolean hasIngredient(BrewerInventory inventory, Player player) {
+		ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
 
-    public static boolean isValidIngredient(Player player, ItemStack item) {
-        if (isEmpty(item)) {
-            return false;
-        }
+		return !isEmpty(ingredient) && isValidIngredient(player, ingredient);
+	}
 
-        for (ItemStack ingredient : getValidIngredients(player)) {
-            if (item.isSimilar(ingredient)) {
-                return true;
-            }
-        }
+	public static boolean isValidIngredient(Player player, ItemStack item) {
+		if (isEmpty(item)) {
+			return false;
+		}
 
-        return false;
-    }
+		for (ItemStack ingredient : getValidIngredients(player)) {
+			if (item.isSimilar(ingredient)) {
+				return true;
+			}
+		}
 
-    private static List<ItemStack> getValidIngredients(Player player) {
-        return PotionConfig.getInstance().getIngredients((player == null || !Permissions.secondaryAbilityEnabled(player, SecondaryAbility.CONCOCTIONS)) ? 1 : UserManager.getPlayer(player).getAlchemyManager().getTier());
-    }
+		return false;
+	}
 
-    public static void finishBrewing(BlockState brewingStand, Player player, boolean forced) {
-        if (!(brewingStand instanceof BrewingStand)) {
-            return;
-        }
+	private static List<ItemStack> getValidIngredients(Player player) {
+		return PotionConfig.getInstance().getIngredients((player == null || !Permissions.secondaryAbilityEnabled(player, SecondaryAbility.CONCOCTIONS)) ? 1 : UserManager.getPlayer(player).getAlchemyManager().getTier());
+	}
 
-        BrewerInventory inventory = ((BrewingStand) brewingStand).getInventory();
-        ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
+	public static void finishBrewing(BlockState brewingStand, Player player, boolean forced) {
+		if (!(brewingStand instanceof BrewingStand)) {
+			return;
+		}
 
-        if (!hasIngredient(inventory, player)) {
-            return;
-        }
+		BrewerInventory inventory = ((BrewingStand) brewingStand).getInventory();
+		ItemStack ingredient = inventory.getIngredient() == null ? null : inventory.getIngredient().clone();
 
-        List<AlchemyPotion> inputList = new ArrayList<AlchemyPotion>();
+		if (!hasIngredient(inventory, player)) {
+			return;
+		}
 
-        for (int i = 0; i < 3; i++) {
-            ItemStack item = inventory.getItem(i);
+		List<AlchemyPotion> inputList = new ArrayList<AlchemyPotion>();
 
-            if (isEmpty(item) || item.getType() == Material.GLASS_BOTTLE || !PotionConfig.getInstance().isValidPotion(item)) {
-                continue;
-            }
+		for (int i = 0; i < 3; i++) {
+			ItemStack item = inventory.getItem(i);
 
-            AlchemyPotion input = PotionConfig.getInstance().getPotion(item);
-            AlchemyPotion output = input.getChild(ingredient);
+			if (isEmpty(item) || item.getType() == Material.GLASS_BOTTLE || !PotionConfig.getInstance().isValidPotion(item)) {
+				continue;
+			}
 
-            inputList.add(input);
+			final AlchemyPotion input = PotionConfig.getInstance().getPotion(item.getDurability());
+			final AlchemyPotion output = PotionConfig.getInstance().getPotion(input.getChildDataValue(ingredient));
 
-            if (output != null) {
-                inventory.setItem(i, output.toItemStack(item.getAmount()).clone());
-            }
-        }
+			inputList.add(input);
 
-        FakeBrewEvent event = new FakeBrewEvent(brewingStand.getBlock(), inventory, ((BrewingStand) brewingStand).getFuelLevel());
-        mcMMO.p.getServer().getPluginManager().callEvent(event);
+			if (output != null) {
+				inventory.setItem(i, output.toItemStack(item.getAmount()).clone());
+			}
+		}
 
-        if (event.isCancelled() || inputList.isEmpty()) {
-            return;
-        }
+		FakeBrewEvent event = new FakeBrewEvent(brewingStand.getBlock(), inventory);
+		mcMMO.p.getServer().getPluginManager().callEvent(event);
 
-        removeIngredient(inventory, player);
+		if (event.isCancelled() || inputList.isEmpty()) {
+			return;
+		}
 
-        for (AlchemyPotion input : inputList) {
-            AlchemyPotion output = input.getChild(ingredient);
+		removeIngredient(inventory, player);
 
-            if (output != null && player != null) {
-                PotionStage potionStage = PotionStage.getPotionStage(input, output);
+		for (AlchemyPotion input : inputList) {
+			final AlchemyPotion output = PotionConfig.getInstance().getPotion(input.getChildDataValue(ingredient));
 
-                if (UserManager.hasPlayerDataKey(player)) {
-                    UserManager.getPlayer(player).getAlchemyManager().handlePotionBrewSuccesses(potionStage, 1);
-                }
-            }
-        }
+			if (output != null && player != null) {
+				PotionStage potionStage = PotionStage.getPotionStage(input, output);
 
-        if (!forced) {
-            scheduleUpdate(inventory);
-        }
-    }
+				if (UserManager.hasPlayerDataKey(player)) {
+					UserManager.getPlayer(player).getAlchemyManager().handlePotionBrewSuccesses(potionStage, 1);
+				}
+			}
+		}
 
-    public static boolean transferItems(InventoryView view, int fromSlot, ClickType click) {
-        boolean success = false;
+		if (!forced) {
+			scheduleUpdate(inventory);
+		}
+	}
 
-        if (click.isLeftClick()) {
-            success = transferItems(view, fromSlot);
-        }
-        else if (click.isRightClick()) {
-            success = transferOneItem(view, fromSlot);
-        }
+	public static boolean transferItems(InventoryView view, int fromSlot, ClickType click) {
+		boolean success = false;
 
-        return success;
-    }
+		if (click.isLeftClick()) {
+			success = transferItems(view, fromSlot);
+		}
+		else if (click.isRightClick()) {
+			success = transferOneItem(view, fromSlot);
+		}
 
-    private static boolean transferOneItem(InventoryView view, int fromSlot) {
-        ItemStack from = view.getItem(fromSlot).clone();
-        ItemStack to = view.getItem(Alchemy.INGREDIENT_SLOT).clone();
+		return success;
+	}
 
-        if (isEmpty(from)) {
-            return false;
-        }
+	private static boolean transferOneItem(InventoryView view, int fromSlot) {
+		ItemStack from = view.getItem(fromSlot).clone();
+		ItemStack to = view.getItem(Alchemy.INGREDIENT_SLOT).clone();
 
-        boolean emptyTo = isEmpty(to);
-        int fromAmount = from.getAmount();
+		if (isEmpty(from)) {
+			return false;
+		}
 
-        if (!emptyTo && fromAmount >= from.getType().getMaxStackSize()) {
-            return false;
-        }
-        else if (emptyTo || from.isSimilar(to)) {
-            if (emptyTo) {
-                to = from.clone();
-                to.setAmount(1);
-            }
-            else {
-                to.setAmount(to.getAmount() + 1);
-            }
+		boolean emptyTo = isEmpty(to);
+		int fromAmount = from.getAmount();
 
-            from.setAmount(fromAmount - 1);
-            view.setItem(Alchemy.INGREDIENT_SLOT, to);
-            view.setItem(fromSlot, from);
+		if (!emptyTo && fromAmount >= from.getType().getMaxStackSize()) {
+			return false;
+		}
+		else if (emptyTo || from.isSimilar(to)) {
+			if (emptyTo) {
+				to = from.clone();
+				to.setAmount(1);
+			}
+			else {
+				to.setAmount(to.getAmount() + 1);
+			}
 
-            return true;
-        }
+			from.setAmount(fromAmount - 1);
+			view.setItem(Alchemy.INGREDIENT_SLOT, to);
+			view.setItem(fromSlot, from);
 
-        return false;
-    }
+			return true;
+		}
 
-    /**
-     * Transfer items between two ItemStacks, returning the leftover status
-     */
-    private static boolean transferItems(InventoryView view, int fromSlot) {
-        ItemStack from = view.getItem(fromSlot).clone();
-        ItemStack to = view.getItem(Alchemy.INGREDIENT_SLOT).clone();
+		return false;
+	}
 
-        if (isEmpty(from)) {
-            return false;
-        }
-        else if (isEmpty(to)) {
-            view.setItem(Alchemy.INGREDIENT_SLOT, from);
-            view.setItem(fromSlot, null);
+	/**
+	 * Transfer items between two ItemStacks, returning the leftover status
+	 */
+	private static boolean transferItems(InventoryView view, int fromSlot) {
+		ItemStack from = view.getItem(fromSlot).clone();
+		ItemStack to = view.getItem(Alchemy.INGREDIENT_SLOT).clone();
 
-            return true;
-        }
-        else if (from.isSimilar(to)) {
-            int fromAmount = from.getAmount();
-            int toAmount = to.getAmount();
-            int maxSize = to.getType().getMaxStackSize();
+		if (isEmpty(from)) {
+			return false;
+		}
+		else if (isEmpty(to)) {
+			view.setItem(Alchemy.INGREDIENT_SLOT, from);
+			view.setItem(fromSlot, null);
 
-            if (fromAmount + toAmount > maxSize) {
-                int left = fromAmount + toAmount - maxSize;
+			return true;
+		}
+		else if (from.isSimilar(to)) {
+			int fromAmount = from.getAmount();
+			int toAmount = to.getAmount();
+			int maxSize = to.getType().getMaxStackSize();
 
-                to.setAmount(maxSize);
-                view.setItem(Alchemy.INGREDIENT_SLOT, to);
+			if (fromAmount + toAmount > maxSize) {
+				int left = fromAmount + toAmount - maxSize;
 
-                from.setAmount(left);
-                view.setItem(fromSlot, from);
+				to.setAmount(maxSize);
+				view.setItem(Alchemy.INGREDIENT_SLOT, to);
 
-                return true;
-            }
+				from.setAmount(left);
+				view.setItem(fromSlot, from);
 
-            to.setAmount(fromAmount + toAmount);
-            view.setItem(fromSlot, null);
-            view.setItem(Alchemy.INGREDIENT_SLOT, to);
+				return true;
+			}
 
-            return true;
-        }
+			to.setAmount(fromAmount + toAmount);
+			view.setItem(fromSlot, null);
+			view.setItem(Alchemy.INGREDIENT_SLOT, to);
 
-        return false;
-    }
+			return true;
+		}
 
-    public static void scheduleCheck(Player player, BrewingStand brewingStand) {
-        new AlchemyBrewCheckTask(player, brewingStand).runTask(mcMMO.p);
-    }
+		return false;
+	}
 
-    public static void scheduleUpdate(Inventory inventory) {
-        for (HumanEntity humanEntity : inventory.getViewers()) {
-            if (humanEntity instanceof Player) {
-                new PlayerUpdateInventoryTask((Player) humanEntity).runTask(mcMMO.p);
-            }
-        }
-    }
+	public static void scheduleCheck(Player player, BrewingStand brewingStand) {
+		new AlchemyBrewCheckTask(player, brewingStand).runTask(mcMMO.p);
+	}
+
+	public static void scheduleUpdate(Inventory inventory) {
+		for (HumanEntity humanEntity : inventory.getViewers()) {
+			if (humanEntity instanceof Player) {
+				new PlayerUpdateInventoryTask((Player) humanEntity).runTask(mcMMO.p);
+			}
+		}
+	}
 }

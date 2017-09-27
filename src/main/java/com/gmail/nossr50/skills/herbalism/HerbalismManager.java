@@ -50,7 +50,7 @@ public class HerbalismManager extends SkillManager {
 
     public boolean canGreenThumbBlock(BlockState blockState) {
         Player player = getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = player.getInventory().getItemInHand();
         
         return item.getAmount() > 0 && item.getType() == Material.SEEDS && BlockUtils.canMakeMossy(blockState) && Permissions.greenThumbBlock(player, blockState.getType());
     }
@@ -58,7 +58,7 @@ public class HerbalismManager extends SkillManager {
     public boolean canUseShroomThumb(BlockState blockState) {
         Player player = getPlayer();
         PlayerInventory inventory = player.getInventory();
-        Material itemType = inventory.getItemInMainHand().getType();
+        Material itemType = inventory.getItemInHand().getType();
 
         return (itemType == Material.BROWN_MUSHROOM || itemType == Material.RED_MUSHROOM) && inventory.contains(Material.BROWN_MUSHROOM, 1) && inventory.contains(Material.RED_MUSHROOM, 1) && BlockUtils.canMakeShroomy(blockState) && Permissions.secondaryAbilityEnabled(player, SecondaryAbility.SHROOM_THUMB);
     }
@@ -123,7 +123,7 @@ public class HerbalismManager extends SkillManager {
     public void herbalismBlockCheck(BlockState blockState) {
         Player player = getPlayer();
         Material material = blockState.getType();
-        boolean oneBlockPlant = !(material == Material.CACTUS || material == Material.CHORUS_PLANT || material == Material.SUGAR_CANE_BLOCK);
+        boolean oneBlockPlant = !(material == Material.CACTUS || material == Material.SUGAR_CANE_BLOCK);
 
         // Prevents placing and immediately breaking blocks for exp
         if (oneBlockPlant && mcMMO.getPlaceStore().isTrue(blockState)) {
@@ -152,10 +152,7 @@ public class HerbalismManager extends SkillManager {
                 processGreenThumbPlants(blockState, greenTerra);
             }
 
-            if(material == Material.CHORUS_FLOWER && blockState.getRawData() != 5) {
-                return;
-            }
-            xp = ExperienceConfig.getInstance().getXp(skill, blockState.getData());
+            xp = ExperienceConfig.getInstance().getXp(skill, blockState.getType());
 
             if (Config.getInstance().getDoubleDropsEnabled(skill, material) && Permissions.secondaryAbilityEnabled(player, SecondaryAbility.HERBALISM_DOUBLE_DROPS)) {
                 drops = blockState.getBlock().getDrops();
@@ -203,26 +200,43 @@ public class HerbalismManager extends SkillManager {
      * @param blockState The {@link BlockState} to check ability activation for
      * @return true if the ability was successful, false otherwise
      */
-    public boolean processHylianLuck(BlockState blockState) {
-        if (!SkillUtils.activationSuccessful(SecondaryAbility.HYLIAN_LUCK, getPlayer(), getSkillLevel(), activationChance)) {
+    public boolean processHylianLuck(final BlockState blockState) {
+        if (!SkillUtils.activationSuccessful(SecondaryAbility.HYLIAN_LUCK, this.getPlayer(), this.getSkillLevel(), this.activationChance)) {
             return false;
         }
-
-        String friendly = StringUtils.getFriendlyConfigMaterialDataString(blockState.getData());
-        if (!TreasureConfig.getInstance().hylianMap.containsKey(friendly))
-            return false;
-        List<HylianTreasure> treasures = TreasureConfig.getInstance().hylianMap.get(friendly);
-
-        Player player = getPlayer();
-
+        List<HylianTreasure> treasures = null;
+        switch (blockState.getType()) {
+            case DEAD_BUSH:
+            case LONG_GRASS:
+            case SAPLING: {
+                treasures = TreasureConfig.getInstance().hylianFromBushes;
+                break;
+            }
+            case RED_ROSE:
+            case YELLOW_FLOWER: {
+                if (mcMMO.getPlaceStore().isTrue(blockState)) {
+                    mcMMO.getPlaceStore().setFalse(blockState);
+                    return false;
+                }
+                treasures = TreasureConfig.getInstance().hylianFromFlowers;
+                break;
+            }
+            case FLOWER_POT: {
+                treasures = TreasureConfig.getInstance().hylianFromPots;
+                break;
+            }
+            default: {
+                return false;
+            }
+        }
+        final Player player = this.getPlayer();
         if (treasures.isEmpty()) {
             return false;
         }
-        int skillLevel = getSkillLevel();
-        Location location = Misc.getBlockCenter(blockState);
-
-        for (HylianTreasure treasure : treasures) {
-            if (skillLevel >= treasure.getDropLevel() && SkillUtils.treasureDropSuccessful(getPlayer(), treasure.getDropChance(), activationChance)) {
+        final int skillLevel = this.getSkillLevel();
+        final Location location = blockState.getLocation();
+        for (final HylianTreasure treasure : treasures) {
+            if (skillLevel >= treasure.getDropLevel() && SkillUtils.treasureDropSuccessful(this.getPlayer(), treasure.getDropChance(), this.activationChance)) {
                 if (!EventUtils.simulateBlockBreak(blockState.getBlock(), player, false)) {
                     return false;
                 }
@@ -295,10 +309,6 @@ public class HerbalismManager extends SkillManager {
                 seed = Material.POTATO_ITEM;
                 break;
 
-            case BEETROOT_BLOCK:
-                seed = Material.BEETROOT_SEEDS;
-                break;
-
             default:
                 return;
         }
@@ -331,7 +341,6 @@ public class HerbalismManager extends SkillManager {
 
             case POTATO:
             case CARROT:
-            case BEETROOT_BLOCK:
             case CROPS:
                 Crops crops = (Crops) blockState.getData();
 

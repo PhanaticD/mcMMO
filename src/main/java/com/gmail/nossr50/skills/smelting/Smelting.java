@@ -49,6 +49,6 @@ public class Smelting {
     protected static int getResourceXp(ItemStack smelting) {
         MaterialData data = smelting.getData();
         
-        return mcMMO.getModManager().isCustomOre(data) ? mcMMO.getModManager().getBlock(data).getSmeltingXpGain() : ExperienceConfig.getInstance().getXp(SkillType.SMELTING, data);
+        return mcMMO.getModManager().isCustomOre(data) ? mcMMO.getModManager().getBlock(data).getSmeltingXpGain() : ExperienceConfig.getInstance().getXp(SkillType.SMELTING, data.getItemType());
     }
 }

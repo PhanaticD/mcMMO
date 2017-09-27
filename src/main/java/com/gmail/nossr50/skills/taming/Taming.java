@@ -1,74 +1,86 @@
 package com.gmail.nossr50.skills.taming;
 
-import org.bukkit.EntityEffect;
-import org.bukkit.entity.AnimalTamer;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import org.bukkit.entity.Wolf;
+import org.bukkit.*;
+import org.bukkit.entity.*;
+import com.gmail.nossr50.locale.*;
+import com.gmail.nossr50.config.*;
+import com.gmail.nossr50.config.experience.*;
 
-import com.gmail.nossr50.config.AdvancedConfig;
-import com.gmail.nossr50.config.experience.ExperienceConfig;
-import com.gmail.nossr50.locale.LocaleLoader;
+public class Taming
+{
+    public static int environmentallyAwareUnlockLevel;
+    public static int holyHoundUnlockLevel;
+    public static int fastFoodServiceUnlockLevel;
+    public static double fastFoodServiceActivationChance;
+    public static int goreBleedTicks;
+    public static double goreModifier;
+    public static int sharpenedClawsUnlockLevel;
+    public static double sharpenedClawsBonusDamage;
+    public static int shockProofUnlockLevel;
+    public static double shockProofModifier;
+    public static int thickFurUnlockLevel;
+    public static double thickFurModifier;
+    public static int wolfXp;
+    public static int ocelotXp;
+    public static int horseXp;
 
-public class Taming {
-    public static int environmentallyAwareUnlockLevel = AdvancedConfig.getInstance().getEnviromentallyAwareUnlock();
-    public static int holyHoundUnlockLevel            = AdvancedConfig.getInstance().getHolyHoundUnlock();
-
-    public static int    fastFoodServiceUnlockLevel      = AdvancedConfig.getInstance().getFastFoodUnlock();
-    public static double fastFoodServiceActivationChance = AdvancedConfig.getInstance().getFastFoodChance();
-
-    public static int    goreBleedTicks    = AdvancedConfig.getInstance().getGoreBleedTicks();
-    public static double goreModifier      = AdvancedConfig.getInstance().getGoreModifier();
-
-    public static int    sharpenedClawsUnlockLevel = AdvancedConfig.getInstance().getSharpenedClawsUnlock();
-    public static double sharpenedClawsBonusDamage = AdvancedConfig.getInstance().getSharpenedClawsBonus();
-
-    public static int    shockProofUnlockLevel = AdvancedConfig.getInstance().getShockProofUnlock();
-    public static double shockProofModifier    = AdvancedConfig.getInstance().getShockProofModifier();
-
-    public static int    thickFurUnlockLevel = AdvancedConfig.getInstance().getThickFurUnlock();
-    public static double thickFurModifier    = AdvancedConfig.getInstance().getThickFurModifier();
-
-    public static boolean canPreventDamage(Tameable pet, AnimalTamer owner) {
+    public static boolean canPreventDamage(final Tameable pet, final AnimalTamer owner) {
         return pet.isTamed() && owner instanceof Player && pet instanceof Wolf;
     }
 
-    public static double processThickFur(Wolf wolf, double damage) {
+    public static double processThickFur(final Wolf wolf, final double damage) {
         wolf.playEffect(EntityEffect.WOLF_SHAKE);
-        return damage / thickFurModifier;
+        return damage / Taming.thickFurModifier;
     }
 
-    public static void processThickFurFire(Wolf wolf) {
+    public static void processThickFurFire(final Wolf wolf) {
         wolf.playEffect(EntityEffect.WOLF_SMOKE);
         wolf.setFireTicks(0);
     }
 
-    public static double processShockProof(Wolf wolf, double damage) {
+    public static double processShockProof(final Wolf wolf, final double damage) {
         wolf.playEffect(EntityEffect.WOLF_SHAKE);
-        return damage / shockProofModifier;
+        return damage / Taming.shockProofModifier;
     }
 
-    public static void processHolyHound(Wolf wolf, double damage) {
-        double modifiedHealth = Math.min(wolf.getHealth() + damage, wolf.getMaxHealth());
-
+    public static void processHolyHound(final Wolf wolf, final double damage) {
+        final double modifiedHealth = Math.min(wolf.getHealth() + damage, wolf.getMaxHealth());
         wolf.setHealth(modifiedHealth);
         wolf.playEffect(EntityEffect.WOLF_HEARTS);
     }
 
-    protected static String getCallOfTheWildFailureMessage(EntityType type) {
+    protected static String getCallOfTheWildFailureMessage(final EntityType type) {
         switch (type) {
-            case OCELOT:
+            case OCELOT: {
                 return LocaleLoader.getString("Taming.Summon.Fail.Ocelot");
-
-            case WOLF:
+            }
+            case WOLF: {
                 return LocaleLoader.getString("Taming.Summon.Fail.Wolf");
-
-            case HORSE:
+            }
+            case HORSE: {
                 return LocaleLoader.getString("Taming.Summon.Fail.Horse");
-
-            default:
+            }
+            default: {
                 return "";
+            }
         }
+    }
+
+    static {
+        Taming.environmentallyAwareUnlockLevel = AdvancedConfig.getInstance().getEnviromentallyAwareUnlock();
+        Taming.holyHoundUnlockLevel = AdvancedConfig.getInstance().getHolyHoundUnlock();
+        Taming.fastFoodServiceUnlockLevel = AdvancedConfig.getInstance().getFastFoodUnlock();
+        Taming.fastFoodServiceActivationChance = AdvancedConfig.getInstance().getFastFoodChance();
+        Taming.goreBleedTicks = AdvancedConfig.getInstance().getGoreBleedTicks();
+        Taming.goreModifier = AdvancedConfig.getInstance().getGoreModifier();
+        Taming.sharpenedClawsUnlockLevel = AdvancedConfig.getInstance().getSharpenedClawsUnlock();
+        Taming.sharpenedClawsBonusDamage = AdvancedConfig.getInstance().getSharpenedClawsBonus();
+        Taming.shockProofUnlockLevel = AdvancedConfig.getInstance().getShockProofUnlock();
+        Taming.shockProofModifier = AdvancedConfig.getInstance().getShockProofModifier();
+        Taming.thickFurUnlockLevel = AdvancedConfig.getInstance().getThickFurUnlock();
+        Taming.thickFurModifier = AdvancedConfig.getInstance().getThickFurModifier();
+        Taming.wolfXp = ExperienceConfig.getInstance().getTamingXPWolf();
+        Taming.ocelotXp = ExperienceConfig.getInstance().getTamingXPOcelot();
+        Taming.horseXp = ExperienceConfig.getInstance().getTamingXPHorse();
     }
 }
