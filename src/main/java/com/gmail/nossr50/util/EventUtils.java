@@ -3,6 +3,7 @@ package com.gmail.nossr50.util;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Fish;
@@ -97,7 +98,7 @@ public class EventUtils {
             callFakeArmSwingEvent(player);
         }
 
-        FakeBlockDamageEvent damageEvent = new FakeBlockDamageEvent(player, block, player.getInventory().getItemInMainHand(), true);
+        FakeBlockDamageEvent damageEvent = new FakeBlockDamageEvent(player, block, player.getInventory().getItemInHand(), true);
         pluginManager.callEvent(damageEvent);
 
         FakeBlockBreakEvent breakEvent = new FakeBlockBreakEvent(block, player);

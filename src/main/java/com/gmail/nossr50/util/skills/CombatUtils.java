@@ -227,7 +227,7 @@ public final class CombatUtils {
                 return;
             }
 
-            ItemStack heldItem = player.getInventory().getItemInMainHand();
+            ItemStack heldItem = player.getInventory().getItemInHand();
 
             if (target instanceof Tameable) {
                 if (heldItem.getType() == Material.BONE) {
@@ -321,7 +321,7 @@ public final class CombatUtils {
                 event.setDamage(acrobaticsManager.dodgeCheck(event.getDamage()));
             }
 
-            if (ItemUtils.isSword(player.getInventory().getItemInMainHand())) {
+            if (ItemUtils.isSword(player.getInventory().getItemInHand())) {
                 if (!SkillType.SWORDS.shouldProcess(target)) {
                     return;
                 }
@@ -399,7 +399,7 @@ public final class CombatUtils {
      * @param type The type of skill being used
      */
     public static void applyAbilityAoE(Player attacker, LivingEntity target, double damage, Map<DamageModifier, Double> modifiers, SkillType type) {
-        int numberOfTargets = getTier(attacker.getInventory().getItemInMainHand()); // The higher the weapon tier, the more targets you hit
+        int numberOfTargets = getTier(attacker.getInventory().getItemInHand()); // The higher the weapon tier, the more targets you hit
         double damageAmount = Math.max(damage, 1);
 
         for (Entity entity : target.getNearbyEntities(2.5, 2.5, 2.5)) {
@@ -472,7 +472,7 @@ public final class CombatUtils {
             }
             else if (target instanceof Animals) {
                 EntityType type = target.getType();
-                baseXP = ExperienceConfig.getInstance().getAnimalsXP(type);
+                baseXP = ExperienceConfig.getInstance().getAnimalsXP();
             }
             else if (target instanceof Monster)
             {
