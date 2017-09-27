@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.potion.Potion;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionType;
 
@@ -45,43 +44,33 @@ public enum PotionStage {
     }
 
     private static boolean isWaterBottle(AlchemyPotion input) {
-        return input.getData().getType() == PotionType.WATER;
+        return input.getData() == 0;
     }
 
-    public static PotionStage getPotionStage(AlchemyPotion alchemyPotion) {
-        PotionData data = alchemyPotion.getData();
-        List<PotionEffect> effects = alchemyPotion.getEffects();
-
+    public static PotionStage getPotionStage(final AlchemyPotion alchemyPotion) {
+        final Potion potion = alchemyPotion.toPotion(1);
+        final List<PotionEffect> effects = alchemyPotion.getEffects();
         int stage = 1;
-
-        // Check if potion has an effect of any sort
-        if (data.getType().getEffectType() != null || !effects.isEmpty()) {
-            stage++;
+        if (potion.getType() != null || !effects.isEmpty()) {
+            ++stage;
         }
-
-        // Check if potion has a glowstone dust amplifier
-        // Else check if the potion has a custom effect with an amplifier added by mcMMO 
-        if (data.isUpgraded()) {
-            stage++;
-        } else if(!effects.isEmpty()) {
-            for (PotionEffect effect : effects){
-                if(effect.getAmplifier() > 0){
-                    stage++;
+        if (potion.getLevel() > 1) {
+            ++stage;
+        }
+        else if (!effects.isEmpty()) {
+            for (final PotionEffect effect : effects) {
+                if (effect.getAmplifier() > 0) {
+                    ++stage;
                     break;
                 }
             }
         }
-
-        // Check if potion has a redstone dust amplifier
-        if (data.isExtended()) {
-            stage++;
+        if (potion.hasExtendedDuration()) {
+            ++stage;
         }
-
-        // Check if potion has a gunpowder amplifier
-        if (alchemyPotion.getMaterial() == Material.SPLASH_POTION || alchemyPotion.getMaterial() == Material.LINGERING_POTION) {
-            stage++;
+        if (potion.isSplash()) {
+            ++stage;
         }
-
-        return PotionStage.getPotionStageNumerical(stage);
+        return getPotionStageNumerical(stage);
     }
 }
