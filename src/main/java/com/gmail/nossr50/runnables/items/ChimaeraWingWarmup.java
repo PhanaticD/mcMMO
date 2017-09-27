@@ -35,7 +35,7 @@ public class ChimaeraWingWarmup extends BukkitRunnable {
             return;
         }
 
-        ItemStack inHand = player.getInventory().getItemInMainHand();
+        ItemStack inHand = player.getInventory().getItemInHand();
 
         if (!ItemUtils.isChimaeraWing(inHand) || inHand.getAmount() < Config.getInstance().getChimaeraUseCost()) {
             player.sendMessage(LocaleLoader.getString("Skills.NeedMore", LocaleLoader.getString("Item.ChimaeraWing.Name")));
