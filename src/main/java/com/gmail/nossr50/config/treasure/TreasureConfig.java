@@ -1,403 +1,461 @@
 package com.gmail.nossr50.config.treasure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.gmail.nossr50.config.*;
+import com.gmail.nossr50.datatypes.treasure.*;
+import java.util.*;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.potion.*;
+import org.bukkit.material.*;
+import org.bukkit.*;
+import org.bukkit.configuration.*;
+import org.bukkit.inventory.meta.*;
+import com.gmail.nossr50.util.*;
+import org.bukkit.enchantments.*;
 
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
-import org.bukkit.TreeSpecies;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.material.Dye;
-import org.bukkit.material.MaterialData;
-import org.bukkit.potion.PotionData;
-import org.bukkit.potion.PotionType;
-
-import com.gmail.nossr50.config.ConfigLoader;
-import com.gmail.nossr50.datatypes.treasure.EnchantmentTreasure;
-import com.gmail.nossr50.datatypes.treasure.ExcavationTreasure;
-import com.gmail.nossr50.datatypes.treasure.FishingTreasure;
-import com.gmail.nossr50.datatypes.treasure.HylianTreasure;
-import com.gmail.nossr50.datatypes.treasure.Rarity;
-import com.gmail.nossr50.datatypes.treasure.ShakeTreasure;
-import com.gmail.nossr50.util.EnchantmentUtils;
-import com.gmail.nossr50.util.StringUtils;
-
-public class TreasureConfig extends ConfigLoader {
-
+public class TreasureConfig extends ConfigLoader
+{
     private static TreasureConfig instance;
-
-    public HashMap<String, List<ExcavationTreasure>> excavationMap = new HashMap<String, List<ExcavationTreasure>>();
-
-    public HashMap<EntityType, List<ShakeTreasure>> shakeMap  = new HashMap<EntityType, List<ShakeTreasure>>();
-    public HashMap<String, List<HylianTreasure>>    hylianMap = new HashMap<String, List<HylianTreasure>>();
-
-    public HashMap<Rarity, List<FishingTreasure>>     fishingRewards      = new HashMap<Rarity, List<FishingTreasure>>();
-    public HashMap<Rarity, List<EnchantmentTreasure>> fishingEnchantments = new HashMap<Rarity, List<EnchantmentTreasure>>();
+    public List<ExcavationTreasure> excavationFromDirt;
+    public List<ExcavationTreasure> excavationFromGrass;
+    public List<ExcavationTreasure> excavationFromSand;
+    public List<ExcavationTreasure> excavationFromGravel;
+    public List<ExcavationTreasure> excavationFromClay;
+    public List<ExcavationTreasure> excavationFromMycel;
+    public List<ExcavationTreasure> excavationFromSoulSand;
+    public List<ExcavationTreasure> excavationFromSnow;
+    public List<ExcavationTreasure> excavationFromRedSand;
+    public List<ExcavationTreasure> excavationFromPodzol;
+    public List<HylianTreasure> hylianFromBushes;
+    public List<HylianTreasure> hylianFromFlowers;
+    public List<HylianTreasure> hylianFromPots;
+    public List<ShakeTreasure> shakeFromBlaze;
+    public List<ShakeTreasure> shakeFromCaveSpider;
+    public List<ShakeTreasure> shakeFromSpider;
+    public List<ShakeTreasure> shakeFromChicken;
+    public List<ShakeTreasure> shakeFromCow;
+    public List<ShakeTreasure> shakeFromCreeper;
+    public List<ShakeTreasure> shakeFromEnderman;
+    public List<ShakeTreasure> shakeFromGhast;
+    public List<ShakeTreasure> shakeFromHorse;
+    public List<ShakeTreasure> shakeFromIronGolem;
+    public List<ShakeTreasure> shakeFromMagmaCube;
+    public List<ShakeTreasure> shakeFromMushroomCow;
+    public List<ShakeTreasure> shakeFromPig;
+    public List<ShakeTreasure> shakeFromPigZombie;
+    public List<ShakeTreasure> shakeFromPlayer;
+    public List<ShakeTreasure> shakeFromSheep;
+    public List<ShakeTreasure> shakeFromSkeleton;
+    public List<ShakeTreasure> shakeFromSlime;
+    public List<ShakeTreasure> shakeFromSnowman;
+    public List<ShakeTreasure> shakeFromSquid;
+    public List<ShakeTreasure> shakeFromWitch;
+    public List<ShakeTreasure> shakeFromZombie;
+    public HashMap<Rarity, List<FishingTreasure>> fishingRewards;
+    public HashMap<Rarity, List<EnchantmentTreasure>> fishingEnchantments;
 
     private TreasureConfig() {
         super("treasures.yml");
-        loadKeys();
-        validate();
+        this.excavationFromDirt = new ArrayList<ExcavationTreasure>();
+        this.excavationFromGrass = new ArrayList<ExcavationTreasure>();
+        this.excavationFromSand = new ArrayList<ExcavationTreasure>();
+        this.excavationFromGravel = new ArrayList<ExcavationTreasure>();
+        this.excavationFromClay = new ArrayList<ExcavationTreasure>();
+        this.excavationFromMycel = new ArrayList<ExcavationTreasure>();
+        this.excavationFromSoulSand = new ArrayList<ExcavationTreasure>();
+        this.excavationFromSnow = new ArrayList<ExcavationTreasure>();
+        this.excavationFromRedSand = new ArrayList<ExcavationTreasure>();
+        this.excavationFromPodzol = new ArrayList<ExcavationTreasure>();
+        this.hylianFromBushes = new ArrayList<HylianTreasure>();
+        this.hylianFromFlowers = new ArrayList<HylianTreasure>();
+        this.hylianFromPots = new ArrayList<HylianTreasure>();
+        this.shakeFromBlaze = new ArrayList<ShakeTreasure>();
+        this.shakeFromCaveSpider = new ArrayList<ShakeTreasure>();
+        this.shakeFromSpider = new ArrayList<ShakeTreasure>();
+        this.shakeFromChicken = new ArrayList<ShakeTreasure>();
+        this.shakeFromCow = new ArrayList<ShakeTreasure>();
+        this.shakeFromCreeper = new ArrayList<ShakeTreasure>();
+        this.shakeFromEnderman = new ArrayList<ShakeTreasure>();
+        this.shakeFromGhast = new ArrayList<ShakeTreasure>();
+        this.shakeFromHorse = new ArrayList<ShakeTreasure>();
+        this.shakeFromIronGolem = new ArrayList<ShakeTreasure>();
+        this.shakeFromMagmaCube = new ArrayList<ShakeTreasure>();
+        this.shakeFromMushroomCow = new ArrayList<ShakeTreasure>();
+        this.shakeFromPig = new ArrayList<ShakeTreasure>();
+        this.shakeFromPigZombie = new ArrayList<ShakeTreasure>();
+        this.shakeFromPlayer = new ArrayList<ShakeTreasure>();
+        this.shakeFromSheep = new ArrayList<ShakeTreasure>();
+        this.shakeFromSkeleton = new ArrayList<ShakeTreasure>();
+        this.shakeFromSlime = new ArrayList<ShakeTreasure>();
+        this.shakeFromSnowman = new ArrayList<ShakeTreasure>();
+        this.shakeFromSquid = new ArrayList<ShakeTreasure>();
+        this.shakeFromWitch = new ArrayList<ShakeTreasure>();
+        this.shakeFromZombie = new ArrayList<ShakeTreasure>();
+        this.fishingRewards = new HashMap<Rarity, List<FishingTreasure>>();
+        this.fishingEnchantments = new HashMap<Rarity, List<EnchantmentTreasure>>();
+        this.loadKeys();
+        this.validate();
     }
 
     public static TreasureConfig getInstance() {
-        if (instance == null) {
-            instance = new TreasureConfig();
+        if (TreasureConfig.instance == null) {
+            TreasureConfig.instance = new TreasureConfig();
         }
-
-        return instance;
+        return TreasureConfig.instance;
     }
 
     @Override
     protected boolean validateKeys() {
-        // Validate all the settings!
-        List<String> reason = new ArrayList<String>();
-
-        for (String tier : config.getConfigurationSection("Enchantment_Drop_Rates").getKeys(false)) {
-            double totalEnchantDropRate = 0;
-            double totalItemDropRate = 0;
-
-            for (Rarity rarity : Rarity.values()) {
-                double enchantDropRate = config.getDouble("Enchantment_Drop_Rates." + tier + "." + rarity.toString());
-                double itemDropRate = config.getDouble("Item_Drop_Rates." + tier + "." + rarity.toString());
-
+        final List<String> reason = new ArrayList<String>();
+        for (final String tier : this.config.getConfigurationSection("Enchantment_Drop_Rates").getKeys(false)) {
+            double totalEnchantDropRate = 0.0;
+            double totalItemDropRate = 0.0;
+            for (final Rarity rarity : Rarity.values()) {
+                final double enchantDropRate = this.config.getDouble("Enchantment_Drop_Rates." + tier + "." + rarity.toString());
+                final double itemDropRate = this.config.getDouble("Item_Drop_Rates." + tier + "." + rarity.toString());
                 if ((enchantDropRate < 0.0 || enchantDropRate > 100.0) && rarity != Rarity.TRAP && rarity != Rarity.RECORD) {
                     reason.add("The enchant drop rate for " + tier + " items that are " + rarity.toString() + "should be between 0.0 and 100.0!");
                 }
-
                 if (itemDropRate < 0.0 || itemDropRate > 100.0) {
                     reason.add("The item drop rate for " + tier + " items that are " + rarity.toString() + "should be between 0.0 and 100.0!");
                 }
-
                 totalEnchantDropRate += enchantDropRate;
                 totalItemDropRate += itemDropRate;
             }
-
-            if (totalEnchantDropRate < 0 || totalEnchantDropRate > 100.0) {
+            if (totalEnchantDropRate < 0.0 || totalEnchantDropRate > 100.0) {
                 reason.add("The total enchant drop rate for " + tier + " should be between 0.0 and 100.0!");
             }
-
-            if (totalItemDropRate < 0 || totalItemDropRate > 100.0) {
+            if (totalItemDropRate < 0.0 || totalItemDropRate > 100.0) {
                 reason.add("The total item drop rate for " + tier + " should be between 0.0 and 100.0!");
             }
         }
-
-        return noErrorsInConfig(reason);
+        return this.noErrorsInConfig(reason);
     }
 
     @Override
     protected void loadKeys() {
-        if (config.getConfigurationSection("Treasures") != null) {
-            backup();
+        if (this.config.getConfigurationSection("Treasures") != null) {
+            this.backup();
             return;
         }
-
-        loadTreasures("Fishing");
-        loadTreasures("Excavation");
-        loadTreasures("Hylian_Luck");
-        loadEnchantments();
-
-        for (EntityType entity : EntityType.values()) {
+        this.loadTreaures("Fishing");
+        this.loadTreaures("Excavation");
+        this.loadTreaures("Hylian_Luck");
+        this.loadEnchantments();
+        for (final EntityType entity : EntityType.values()) {
             if (entity.isAlive()) {
-                loadTreasures("Shake." + entity.toString());
+                this.loadTreaures("Shake." + entity.toString());
             }
         }
     }
 
-    private void loadTreasures(String type) {
-        boolean isFishing = type.equals("Fishing");
-        boolean isShake = type.contains("Shake");
-        boolean isExcavation = type.equals("Excavation");
-        boolean isHylian = type.equals("Hylian_Luck");
-
-        ConfigurationSection treasureSection = config.getConfigurationSection(type);
-
+    private void loadTreaures(final String type) {
+        final boolean isFishing = type.equals("Fishing");
+        final boolean isShake = type.contains("Shake");
+        final boolean isExcavation = type.equals("Excavation");
+        final boolean isHylian = type.equals("Hylian_Luck");
+        final ConfigurationSection treasureSection = this.config.getConfigurationSection(type);
         if (treasureSection == null) {
             return;
         }
-
-        // Initialize fishing HashMap
-        for (Rarity rarity : Rarity.values()) {
-            if (!fishingRewards.containsKey(rarity)) {
-                fishingRewards.put(rarity, (new ArrayList<FishingTreasure>()));
+        for (final Rarity rarity : Rarity.values()) {
+            if (!this.fishingRewards.containsKey(rarity)) {
+                this.fishingRewards.put(rarity, new ArrayList<FishingTreasure>());
             }
         }
-
-        for (String treasureName : treasureSection.getKeys(false)) {
-            // Validate all the things!
-            List<String> reason = new ArrayList<String>();
-
-            String[] treasureInfo = treasureName.split("[|]");
-            String materialName = treasureInfo[0];
-
-            /*
-             * Material, Amount, and Data
-             */
+        for (final String treasureName : treasureSection.getKeys(false)) {
+            final List<String> reason = new ArrayList<String>();
+            final String[] treasureInfo = treasureName.split("[|]");
+            final String materialName = treasureInfo[0];
             Material material;
-
-            if (materialName.contains("INK_SACK")) {
+            if (materialName.contains("POTION")) {
+                material = Material.POTION;
+            }
+            else if (materialName.contains("INK_SACK")) {
                 material = Material.INK_SACK;
-            } else if (materialName.contains("COAL")) {
-                material = Material.COAL;
-            } else if (materialName.contains("INVENTORY")) {
-                // Use magic material BED_BLOCK to know that we're grabbing something from the inventory and not a normal treasure
-                if (!shakeMap.containsKey(EntityType.PLAYER))
-                    shakeMap.put(EntityType.PLAYER, new ArrayList<ShakeTreasure>());
-                shakeMap.get(EntityType.PLAYER).add(new ShakeTreasure(new ItemStack(Material.BED_BLOCK, 1, (byte) 0), 1, getInventoryStealDropChance(), getInventoryStealDropLevel()));
-                continue;
-            } else {
+            }
+            else {
+                if (materialName.contains("INVENTORY")) {
+                    this.shakeFromPlayer.add(new ShakeTreasure(new ItemStack(Material.BED_BLOCK, 1, (short)0), 1, this.getInventoryStealDropChance(), this.getInventoryStealDropLevel()));
+                    continue;
+                }
                 material = Material.matchMaterial(materialName);
             }
-
-            int amount = config.getInt(type + "." + treasureName + ".Amount");
-            short data = (treasureInfo.length == 2) ? Short.parseShort(treasureInfo[1]) : (short) config.getInt(type + "." + treasureName + ".Data");
-
+            final int amount = this.config.getInt(type + "." + treasureName + ".Amount");
+            final short data = (treasureInfo.length == 2) ? Short.parseShort(treasureInfo[1]) : ((short)this.config.getInt(type + "." + treasureName + ".Data"));
             if (material == null) {
                 reason.add("Invalid material: " + materialName);
             }
-
             if (amount <= 0) {
                 reason.add("Amount of " + treasureName + " must be greater than 0! " + amount);
             }
-
             if (material != null && material.isBlock() && (data > 127 || data < -128)) {
                 reason.add("Data of " + treasureName + " is invalid! " + data);
             }
-
-            /*
-             * XP, Drop Chance, and Drop Level
-             */
-
-            int xp = config.getInt(type + "." + treasureName + ".XP");
-            double dropChance = config.getDouble(type + "." + treasureName + ".Drop_Chance");
-            int dropLevel = config.getInt(type + "." + treasureName + ".Drop_Level");
-
+            final int xp = this.config.getInt(type + "." + treasureName + ".XP");
+            final double dropChance = this.config.getDouble(type + "." + treasureName + ".Drop_Chance");
+            final int dropLevel = this.config.getInt(type + "." + treasureName + ".Drop_Level");
             if (xp < 0) {
                 reason.add(treasureName + " has an invalid XP value: " + xp);
             }
-
-            if (dropChance < 0.0D) {
+            if (dropChance < 0.0) {
                 reason.add(treasureName + " has an invalid Drop_Chance: " + dropChance);
             }
-
             if (dropLevel < 0) {
                 reason.add(treasureName + " has an invalid Drop_Level: " + dropLevel);
             }
-
-            /*
-             * Specific Types
-             */
-            Rarity rarity = null;
-
+            Rarity rarity2 = null;
             if (isFishing) {
-                rarity = Rarity.getRarity(config.getString(type + "." + treasureName + ".Rarity"));
-
-                if (rarity == null) {
+                rarity2 = Rarity.getRarity(this.config.getString(type + "." + treasureName + ".Rarity"));
+                if (rarity2 == null) {
                     reason.add("Invalid Rarity for item: " + treasureName);
                 }
             }
-
-            /*
-             * Itemstack
-             */
             ItemStack item = null;
-
             if (materialName.contains("POTION")) {
-                Material mat = Material.matchMaterial(materialName);
-                if (mat == null) {
-                    reason.add("Potion format for Treasures.yml has changed");
-                } else {
-                    item = new ItemStack(mat, amount, data);
-                    PotionMeta itemMeta = (PotionMeta) item.getItemMeta();
-
-                    PotionType potionType = null;
-                    try {
-                        potionType = PotionType.valueOf(config.getString(type + "." + treasureName + ".PotionData.PotionType", "WATER"));
-                    } catch (IllegalArgumentException ex) {
-                        reason.add("Invalid Potion_Type: " + config.getString(type + "." + treasureName + ".PotionData.PotionType", "WATER"));
-                    }
-                    boolean extended = config.getBoolean(type + "." + treasureName + ".PotionData.Extended", false);
-                    boolean upgraded = config.getBoolean(type + "." + treasureName + ".PotionData.Upgraded", false);
-                    itemMeta.setBasePotionData(new PotionData(potionType, extended, upgraded));
-
-                    if (config.contains(type + "." + treasureName + ".Custom_Name")) {
-                        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getString(type + "." + treasureName + ".Custom_Name")));
-                    }
-
-                    if (config.contains(type + "." + treasureName + ".Lore")) {
-                        List<String> lore = new ArrayList<String>();
-                        for (String s : config.getStringList(type + "." + treasureName + ".Lore")) {
-                            lore.add(ChatColor.translateAlternateColorCodes('&', s));
-                        }
-                        itemMeta.setLore(lore);
-                    }
-                    item.setItemMeta(itemMeta);
-                }
-            } else if (materialName.contains("INK_SACK")) {
-                String color = materialName.substring(9);
-
+                final String potionType = materialName.substring(7);
                 try {
-                    Dye dye = new Dye();
-                    dye.setColor(DyeColor.valueOf(color.toUpperCase().trim()));
-
-                    item = dye.toItemStack(amount);
-
-                    if (config.contains(type + "." + treasureName + ".Custom_Name")) {
-                        ItemMeta itemMeta = item.getItemMeta();
-                        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getString(type + "." + treasureName + ".Custom_Name")));
+                    item = new Potion(PotionType.valueOf(potionType.toUpperCase().trim())).toItemStack(amount);
+                    if (this.config.contains(type + "." + treasureName + ".Custom_Name")) {
+                        final ItemMeta itemMeta = item.getItemMeta();
+                        itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.config.getString(type + "." + treasureName + ".Custom_Name")));
                         item.setItemMeta(itemMeta);
                     }
-
-                    if (config.contains(type + "." + treasureName + ".Lore")) {
-                        ItemMeta itemMeta = item.getItemMeta();
-                        List<String> lore = new ArrayList<String>();
-                        for (String s : config.getStringList(type + "." + treasureName + ".Lore")) {
+                    if (this.config.contains(type + "." + treasureName + ".Lore")) {
+                        final ItemMeta itemMeta = item.getItemMeta();
+                        final List<String> lore = new ArrayList<String>();
+                        for (final String s : this.config.getStringList(type + "." + treasureName + ".Lore")) {
                             lore.add(ChatColor.translateAlternateColorCodes('&', s));
                         }
-                        itemMeta.setLore(lore);
+                        itemMeta.setLore((List)lore);
                         item.setItemMeta(itemMeta);
                     }
-                } catch (IllegalArgumentException ex) {
-                    reason.add("Invalid Dye_Color: " + color);
                 }
-            } else if (material != null) {
-                item = new ItemStack(material, amount, data);
-
-                if (config.contains(type + "." + treasureName + ".Custom_Name")) {
-                    ItemMeta itemMeta = item.getItemMeta();
-                    itemMeta.setDisplayName(ChatColor.translateAlternateColorCodes('&', config.getString(type + "." + treasureName + ".Custom_Name")));
-                    item.setItemMeta(itemMeta);
-                }
-
-                if (config.contains(type + "." + treasureName + ".Lore")) {
-                    ItemMeta itemMeta = item.getItemMeta();
-                    List<String> lore = new ArrayList<String>();
-                    for (String s : config.getStringList(type + "." + treasureName + ".Lore")) {
-                        lore.add(ChatColor.translateAlternateColorCodes('&', s));
-                    }
-                    itemMeta.setLore(lore);
-                    item.setItemMeta(itemMeta);
+                catch (IllegalArgumentException ex) {
+                    reason.add("Invalid Potion_Type: " + potionType);
                 }
             }
-
-            if (noErrorsInConfig(reason)) {
+            else if (materialName.contains("INK_SACK")) {
+                final String color = materialName.substring(9);
+                try {
+                    final Dye dye = new Dye();
+                    dye.setColor(DyeColor.valueOf(color.toUpperCase().trim()));
+                    item = dye.toItemStack(amount);
+                    if (this.config.contains(type + "." + treasureName + ".Custom_Name")) {
+                        final ItemMeta itemMeta2 = item.getItemMeta();
+                        itemMeta2.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.config.getString(type + "." + treasureName + ".Custom_Name")));
+                        item.setItemMeta(itemMeta2);
+                    }
+                    if (this.config.contains(type + "." + treasureName + ".Lore")) {
+                        final ItemMeta itemMeta2 = item.getItemMeta();
+                        final List<String> lore2 = new ArrayList<String>();
+                        for (final String s2 : this.config.getStringList(type + "." + treasureName + ".Lore")) {
+                            lore2.add(ChatColor.translateAlternateColorCodes('&', s2));
+                        }
+                        itemMeta2.setLore((List)lore2);
+                        item.setItemMeta(itemMeta2);
+                    }
+                }
+                catch (IllegalArgumentException ex) {
+                    reason.add("Invalid Dye_Color: " + color);
+                }
+            }
+            else if (material != null) {
+                item = new ItemStack(material, amount, data);
+                if (this.config.contains(type + "." + treasureName + ".Custom_Name")) {
+                    final ItemMeta itemMeta3 = item.getItemMeta();
+                    itemMeta3.setDisplayName(ChatColor.translateAlternateColorCodes('&', this.config.getString(type + "." + treasureName + ".Custom_Name")));
+                    item.setItemMeta(itemMeta3);
+                }
+                if (this.config.contains(type + "." + treasureName + ".Lore")) {
+                    final ItemMeta itemMeta3 = item.getItemMeta();
+                    final List<String> lore3 = new ArrayList<String>();
+                    for (final String s3 : this.config.getStringList(type + "." + treasureName + ".Lore")) {
+                        lore3.add(ChatColor.translateAlternateColorCodes('&', s3));
+                    }
+                    itemMeta3.setLore((List)lore3);
+                    item.setItemMeta(itemMeta3);
+                }
+            }
+            if (this.noErrorsInConfig(reason)) {
                 if (isFishing) {
-                    fishingRewards.get(rarity).add(new FishingTreasure(item, xp));
-                } else if (isShake) {
-                    ShakeTreasure shakeTreasure = new ShakeTreasure(item, xp, dropChance, dropLevel);
-
-                    EntityType entityType = EntityType.valueOf(type.substring(6));
-                    if (!shakeMap.containsKey(entityType))
-                        shakeMap.put(entityType, new ArrayList<ShakeTreasure>());
-                    shakeMap.get(entityType).add(shakeTreasure);
-                } else if (isExcavation) {
-                    ExcavationTreasure excavationTreasure = new ExcavationTreasure(item, xp, dropChance, dropLevel);
-                    List<String> dropList = config.getStringList(type + "." + treasureName + ".Drops_From");
-
-                    for (String blockType : dropList) {
-                        if (!excavationMap.containsKey(blockType))
-                            excavationMap.put(blockType, new ArrayList<ExcavationTreasure>());
-                        excavationMap.get(blockType).add(excavationTreasure);
+                    this.fishingRewards.get(rarity2).add(new FishingTreasure(item, xp));
+                }
+                else if (isShake) {
+                    final ShakeTreasure shakeTreasure = new ShakeTreasure(item, xp, dropChance, dropLevel);
+                    if (type.equals("Shake.BLAZE")) {
+                        this.shakeFromBlaze.add(shakeTreasure);
                     }
-                } else if (isHylian) {
-                    HylianTreasure hylianTreasure = new HylianTreasure(item, xp, dropChance, dropLevel);
-                    List<String> dropList = config.getStringList(type + "." + treasureName + ".Drops_From");
-
-                    for (String dropper : dropList) {
-                        if (dropper.equals("Bushes")) {
-                            AddHylianTreasure("Small_Fern", hylianTreasure);
-                            AddHylianTreasure("Small_Grass", hylianTreasure);
-                            for (TreeSpecies species : TreeSpecies.values()) {
-                                AddHylianTreasure(StringUtils.getPrettyTreeSpeciesString(species) + "_Sapling", hylianTreasure);
-                            }
-
-                            AddHylianTreasure(StringUtils.getPrettyItemString(Material.DEAD_BUSH), hylianTreasure);
-                            continue;
-                        }
-                        if (dropper.equals("Flowers")) {
-                            for (int i = 0; i < 9; i++) {
-                                AddHylianTreasure(StringUtils.getFriendlyConfigMaterialDataString(new MaterialData(Material.RED_ROSE, (byte) i)), hylianTreasure);
-                            }
-                            AddHylianTreasure(StringUtils.getPrettyItemString(Material.YELLOW_FLOWER), hylianTreasure);
-                            continue;
-                        }
-                        if (dropper.equals("Pots")) {
-                            for (int i = 0; i < 14; i++) {
-                                AddHylianTreasure(StringUtils.getFriendlyConfigMaterialDataString(new MaterialData(Material.FLOWER_POT, (byte) i)), hylianTreasure);
-                            }
-                            continue;
-                        }
-                        AddHylianTreasure(dropper, hylianTreasure);
+                    else if (type.equals("Shake.CAVE_SPIDER")) {
+                        this.shakeFromCaveSpider.add(shakeTreasure);
                     }
+                    else if (type.equals("Shake.CHICKEN")) {
+                        this.shakeFromChicken.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.COW")) {
+                        this.shakeFromCow.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.CREEPER")) {
+                        this.shakeFromCreeper.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.ENDERMAN")) {
+                        this.shakeFromEnderman.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.GHAST")) {
+                        this.shakeFromGhast.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.HORSE")) {
+                        this.shakeFromHorse.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.IRON_GOLEM")) {
+                        this.shakeFromIronGolem.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.MAGMA_CUBE")) {
+                        this.shakeFromMagmaCube.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.MUSHROOM_COW")) {
+                        this.shakeFromMushroomCow.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.PIG")) {
+                        this.shakeFromPig.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.PIG_ZOMBIE")) {
+                        this.shakeFromPigZombie.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.PLAYER")) {
+                        this.shakeFromPlayer.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SHEEP")) {
+                        this.shakeFromSheep.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SKELETON")) {
+                        this.shakeFromSkeleton.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SLIME")) {
+                        this.shakeFromSlime.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SPIDER")) {
+                        this.shakeFromSpider.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SNOWMAN")) {
+                        this.shakeFromSnowman.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.SQUID")) {
+                        this.shakeFromSquid.add(shakeTreasure);
+                    }
+                    else if (type.equals("Shake.WITCH")) {
+                        this.shakeFromWitch.add(shakeTreasure);
+                    }
+                    else {
+                        if (!type.equals("Shake.ZOMBIE")) {
+                            continue;
+                        }
+                        this.shakeFromZombie.add(shakeTreasure);
+                    }
+                }
+                else if (isExcavation) {
+                    final ExcavationTreasure excavationTreasure = new ExcavationTreasure(item, xp, dropChance, dropLevel);
+                    final List<String> dropList = (List<String>)this.config.getStringList(type + "." + treasureName + ".Drops_From");
+                    if (dropList.contains("Dirt")) {
+                        this.excavationFromDirt.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Grass")) {
+                        this.excavationFromGrass.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Sand")) {
+                        this.excavationFromSand.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Gravel")) {
+                        this.excavationFromGravel.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Clay")) {
+                        this.excavationFromClay.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Mycelium")) {
+                        this.excavationFromMycel.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Soul_Sand")) {
+                        this.excavationFromSoulSand.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Snow")) {
+                        this.excavationFromSnow.add(excavationTreasure);
+                    }
+                    if (dropList.contains("Red_Sand")) {
+                        this.excavationFromRedSand.add(excavationTreasure);
+                    }
+                    if (!dropList.contains("Podzol")) {
+                        continue;
+                    }
+                    this.excavationFromPodzol.add(excavationTreasure);
+                }
+                else {
+                    if (!isHylian) {
+                        continue;
+                    }
+                    final HylianTreasure hylianTreasure = new HylianTreasure(item, xp, dropChance, dropLevel);
+                    final List<String> dropList = (List<String>)this.config.getStringList(type + "." + treasureName + ".Drops_From");
+                    if (dropList.contains("Bushes")) {
+                        this.hylianFromBushes.add(hylianTreasure);
+                    }
+                    if (dropList.contains("Flowers")) {
+                        this.hylianFromFlowers.add(hylianTreasure);
+                    }
+                    if (!dropList.contains("Pots")) {
+                        continue;
+                    }
+                    this.hylianFromPots.add(hylianTreasure);
                 }
             }
         }
     }
 
-    private void AddHylianTreasure(String dropper, HylianTreasure treasure) {
-        if (!hylianMap.containsKey(dropper))
-            hylianMap.put(dropper, new ArrayList<HylianTreasure>());
-        hylianMap.get(dropper).add(treasure);
-    }
-
     private void loadEnchantments() {
-        for (Rarity rarity : Rarity.values()) {
-            if (rarity == Rarity.TRAP || rarity == Rarity.RECORD) {
-                continue;
-            }
-
-            if (!fishingEnchantments.containsKey(rarity)) {
-                fishingEnchantments.put(rarity, (new ArrayList<EnchantmentTreasure>()));
-            }
-
-            ConfigurationSection enchantmentSection = config.getConfigurationSection("Enchantments_Rarity." + rarity.toString());
-
-            if (enchantmentSection == null) {
-                return;
-            }
-
-            for (String enchantmentName : enchantmentSection.getKeys(false)) {
-                int level = config.getInt("Enchantments_Rarity." + rarity.toString() + "." + enchantmentName);
-                Enchantment enchantment = EnchantmentUtils.getByName(enchantmentName);
-
-                if (enchantment == null) {
-                    plugin.getLogger().warning("Skipping invalid enchantment in treasures.yml: " + enchantmentName);
-                    continue;
+        for (final Rarity rarity : Rarity.values()) {
+            if (rarity != Rarity.TRAP) {
+                if (rarity != Rarity.RECORD) {
+                    if (!this.fishingEnchantments.containsKey(rarity)) {
+                        this.fishingEnchantments.put(rarity, new ArrayList<EnchantmentTreasure>());
+                    }
+                    final ConfigurationSection enchantmentSection = this.config.getConfigurationSection("Enchantments_Rarity." + rarity.toString());
+                    if (enchantmentSection == null) {
+                        return;
+                    }
+                    for (final String enchantmentName : enchantmentSection.getKeys(false)) {
+                        final int level = this.config.getInt("Enchantments_Rarity." + rarity.toString() + "." + enchantmentName);
+                        final Enchantment enchantment = EnchantmentUtils.getByName(enchantmentName);
+                        if (enchantment == null) {
+                            TreasureConfig.plugin.getLogger().warning("Skipping invalid enchantment in treasures.yml: " + enchantmentName);
+                        }
+                        else {
+                            this.fishingEnchantments.get(rarity).add(new EnchantmentTreasure(enchantment, level));
+                        }
+                    }
                 }
-
-                fishingEnchantments.get(rarity).add(new EnchantmentTreasure(enchantment, level));
             }
         }
     }
 
     public boolean getInventoryStealEnabled() {
-        return config.contains("Shake.PLAYER.INVENTORY");
+        return this.config.contains("Shake.PLAYER.INVENTORY");
     }
 
     public boolean getInventoryStealStacks() {
-        return config.getBoolean("Shake.PLAYER.INVENTORY.Whole_Stacks");
+        return this.config.getBoolean("Shake.PLAYER.INVENTORY.Whole_Stacks");
     }
 
     public double getInventoryStealDropChance() {
-        return config.getDouble("Shake.PLAYER.INVENTORY.Drop_Chance");
+        return this.config.getDouble("Shake.PLAYER.INVENTORY.Drop_Chance");
     }
 
     public int getInventoryStealDropLevel() {
-        return config.getInt("Shake.PLAYER.INVENTORY.Drop_Level");
+        return this.config.getInt("Shake.PLAYER.INVENTORY.Drop_Level");
     }
 
-    public double getItemDropRate(int tier, Rarity rarity) {
-        return config.getDouble("Item_Drop_Rates.Tier_" + tier + "." + rarity.toString());
+    public double getItemDropRate(final int tier, final Rarity rarity) {
+        return this.config.getDouble("Item_Drop_Rates.Tier_" + tier + "." + rarity.toString());
     }
 
-    public double getEnchantmentDropRate(int tier, Rarity rarity) {
-        return config.getDouble("Enchantment_Drop_Rates.Tier_" + tier + "." + rarity.toString());
+    public double getEnchantmentDropRate(final int tier, final Rarity rarity) {
+        return this.config.getDouble("Enchantment_Drop_Rates.Tier_" + tier + "." + rarity.toString());
     }
 }
