@@ -1,5 +1,6 @@
 package com.gmail.nossr50.runnables.skills;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockState;
@@ -48,46 +49,29 @@ public class AlchemyBrewTask extends BukkitRunnable {
                 brewSpeed = catalysis;
             }
         }
-
         if (Alchemy.brewingStandMap.containsKey(location)) {
             Alchemy.brewingStandMap.get(location).cancel();
         }
-
-        fuel = ((BrewingStand) brewingStand).getFuelLevel();
-
-        if (((BrewingStand) brewingStand).getBrewingTime() == -1) // Only decrement on our end if it isn't a vanilla ingredient.
-            fuel--;
-
         Alchemy.brewingStandMap.put(location, this);
         this.runTaskTimer(mcMMO.p, 1, 1);
     }
 
     @Override
     public void run() {
-        if (player == null || !player.isValid() || brewingStand == null || brewingStand.getType() != Material.BREWING_STAND || !AlchemyPotionBrewer.isValidIngredient(player, ((BrewingStand) brewingStand).getInventory().getContents()[Alchemy.INGREDIENT_SLOT])) {
-            if (Alchemy.brewingStandMap.containsKey(location)) {
-                Alchemy.brewingStandMap.remove(location);
+        if (this.player == null || !this.player.isValid() || this.brewingStand == null || this.brewingStand.getType() != Material.BREWING_STAND) {
+            if (Alchemy.brewingStandMap.containsKey(this.location)) {
+                Alchemy.brewingStandMap.remove(this.location);
             }
-
             this.cancel();
-
             return;
         }
-
-        if (firstRun) {
-            firstRun = false;
-            ((BrewingStand) brewingStand).setFuelLevel(fuel);
-        }
-
-        brewTimer -= brewSpeed;
-
-        // Vanilla potion brewing completes when BrewingTime == 1
-        if (brewTimer < Math.max(brewSpeed, 2)) {
+        this.brewTimer -= this.brewSpeed;
+        if (this.brewTimer < Math.max(this.brewSpeed, 2.0)) {
             this.cancel();
-            finish();
+            this.finish();
         }
         else {
-            ((BrewingStand) brewingStand).setBrewingTime((int) brewTimer);
+            ((BrewingStand)this.brewingStand).setBrewingTime((int)this.brewTimer);
         }
     }
 

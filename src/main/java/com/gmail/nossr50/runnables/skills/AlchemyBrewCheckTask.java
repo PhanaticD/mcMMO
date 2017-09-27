@@ -2,7 +2,9 @@ package com.gmail.nossr50.runnables.skills;
 
 import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.BrewingStand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -22,19 +24,17 @@ public class AlchemyBrewCheckTask extends BukkitRunnable {
         this.oldInventory = Arrays.copyOfRange(brewingStand.getInventory().getContents(), 0, 4);
     }
 
-    @Override
     public void run() {
-        Location location = brewingStand.getLocation();
-        ItemStack[] newInventory = Arrays.copyOfRange(brewingStand.getInventory().getContents(), 0, 4);
-        boolean validBrew = brewingStand.getFuelLevel() > 0 && AlchemyPotionBrewer.isValidBrew(player, newInventory);
-
+        final Location location = this.brewingStand.getLocation();
+        final ItemStack[] newInventory = Arrays.copyOfRange(this.brewingStand.getInventory().getContents(), 0, 4);
+        final boolean validBrew = AlchemyPotionBrewer.isValidBrew(this.player, newInventory);
         if (Alchemy.brewingStandMap.containsKey(location)) {
-            if (oldInventory[Alchemy.INGREDIENT_SLOT] == null || newInventory[Alchemy.INGREDIENT_SLOT] == null || !oldInventory[Alchemy.INGREDIENT_SLOT].isSimilar(newInventory[Alchemy.INGREDIENT_SLOT]) || !validBrew) {
+            if (this.oldInventory[3] == null || newInventory[3] == null || !this.oldInventory[3].isSimilar(newInventory[3]) || !validBrew) {
                 Alchemy.brewingStandMap.get(location).cancelBrew();
             }
         }
         else if (validBrew) {
-            Alchemy.brewingStandMap.put(location, new AlchemyBrewTask(brewingStand, player));
+            Alchemy.brewingStandMap.put(location, new AlchemyBrewTask((BlockState)this.brewingStand, this.player));
         }
     }
 }
