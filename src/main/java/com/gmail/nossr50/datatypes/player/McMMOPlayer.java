@@ -747,7 +747,7 @@ public class McMMOPlayer {
 
 		if (timeRemaining > 0) {
 			/*
-             * Axes and Woodcutting are odd because they share the same tool.
+			 * Axes and Woodcutting are odd because they share the same tool.
              * We show them the too tired message when they take action.
              */
 			if (skill == SkillType.WOODCUTTING || skill == SkillType.AXES) {
@@ -808,7 +808,7 @@ public class McMMOPlayer {
 		ToolType tool = skill.getTool();
 
         /*
-         * Woodcutting & Axes need to be treated differently.
+		 * Woodcutting & Axes need to be treated differently.
          * Basically the tool always needs to ready and we check to see if the cooldown is over when the user takes action
          */
 		if (ability.getPermissions(player) && tool.inHand(inHand) && !getToolPreparationMode(tool)) {
