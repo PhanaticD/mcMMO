@@ -47,13 +47,29 @@ public final class Woodcutting {
 	 * @return Amount of experience
 	 */
 	protected static int getExperienceFromLog(BlockState blockState, ExperienceGainMethod experienceGainMethod) {
+		// Mushrooms aren't trees so we could never get species data from them
+		switch (blockState.getType()) {
+			case HUGE_MUSHROOM_1:
+				return ExperienceConfig.getInstance().getWoodcuttingXPHugeBrownMushroom();
+
+			case HUGE_MUSHROOM_2:
+				return ExperienceConfig.getInstance().getWoodcuttingXPHugeRedMushroom();
+
+			default:
+				break;
+		}
+
 		if (mcMMO.getModManager().isCustomLog(blockState)) {
 			return mcMMO.getModManager().getBlock(blockState).getXpGain();
 		}
 
-		Tree tree = (Tree) blockState.getData();
+		//TODO Remove this workaround when casting to Tree works again
+		TreeSpecies species = TreeSpecies.GENERIC;
+		if (blockState.getData() instanceof Tree) {
+			species = ((Tree) blockState.getData()).getSpecies();
+		}
 
-		return ExperienceConfig.getInstance().getWoodcuttingTreeXP(tree.getSpecies());
+		return ExperienceConfig.getInstance().getWoodcuttingTreeXP(species);
 	}
 
 	/**
